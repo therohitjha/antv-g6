@@ -20,8 +20,8 @@ export default function Wrapper(Component) {
 
     const [config, setConfig] = useState({
       nodeSize: 18,
-      width: 1074,
-      height: 700,
+      width: window.innerWidth/2,
+      height: window.innerHeight,
       layout: "force",
       isLabelShow: false,
     });
