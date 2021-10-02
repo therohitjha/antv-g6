@@ -7,8 +7,10 @@ function Sidebar({ getEdges, getNodes, nodes, edges }) {
       <br />
       Edges: {edges.length ? edges.length : null}
       <br />
-      <button onClick={getNodes}>Get Nodes</button>
-      <button onClick={getEdges}>Get Edges</button>
+      <div>
+        <button onClick={getNodes}>Get Nodes</button>
+        <button onClick={getEdges}>Get Edges</button>
+      </div>
     </div>
   );
 }
