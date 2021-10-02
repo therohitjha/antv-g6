@@ -57,3 +57,19 @@ body {
   min-width: 500px;
   padding: 24px;
 }
+
+
+button{
+  background-color: #07c6f9;
+  color: whitesmoke;
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 5px;
+  outline: none;
+ 
+}
+
+button:hover{
+  transition: all .4s ease-out;
+}
