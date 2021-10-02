@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import G6 from "@antv/g6";
 import color from "color";
-import useData from "./hooks/useData";
-import { layoutMap, CURVENESS_LIST } from "./utils/constant";
+import useData from "../hooks/useData";
+import { layoutMap, CURVENESS_LIST } from "../utils/constant";
 import "antd/dist/antd.css";
-import { handleEvent } from "./utils";
-import "./register";
-import "./index.css";
+import { handleEvent } from "../utils";
+import "../register";
+import "../index.css";
 
 const NodeColor = "#fff";
 const NodeBorderColor = "#0052D9";
