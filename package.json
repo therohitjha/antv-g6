@@ -1,0 +1,25 @@
+{
+  "main": "index.js",
+  "dependencies": {
+    "@antv/g6": "3.7.0",
+    "@antv/graphin": "1.4.4",
+    "antd": "4.5.2",
+    "color": "3.1.2",
+    "insert-css": "2.0.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  },
+  "keywords": [],
+  "name": "react-g6-multi-graph-sync-forked",
+  "description": null,
+  "version": "0.0.0",
+  "devDependencies": {
+    "react-scripts": "1.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
