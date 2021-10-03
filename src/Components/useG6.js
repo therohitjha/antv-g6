@@ -18,8 +18,8 @@ export default function useG6() {
   const [zoom, setZoom] = useState(0);
   const [config, setConfig] = useState({
     nodeSize: 18,
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: 1000,
+    height: 700,
     layout: "force",
     isLabelShow: false,
   });
