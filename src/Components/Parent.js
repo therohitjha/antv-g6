@@ -4,10 +4,9 @@ import Canvas from "./Canvas";
 import Sidebar from "./Sidebar";
 
 export default function Parent() {
-  const [canvasRef] = useG6();
+  const [canvasRef, hide, setHide] = useG6();
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  const [hide, setHide] = useState(false);
 
   const getNodes = () => {
     if (canvasRef.current) {

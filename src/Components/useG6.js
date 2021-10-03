@@ -16,6 +16,7 @@ export default function useG6() {
   const canvasRef = useRef(null);
   const graphRef = useRef(null);
   const [zoom, setZoom] = useState(0);
+  const [hide, setHide] = useState(false);
   const [config, setConfig] = useState({
     nodeSize: 18,
     width: 1000,
@@ -26,9 +27,9 @@ export default function useG6() {
   const { nodeSize, width, height, layout, isLabelShow } = config;
   const data = useData(0);
 
-  useEffect(() => {
-    function resizeListener() {
-      const graph = graphRef.current;
+  function resizeListener() {
+    const graph = graphRef.current;
+    if (graph) {
       setConfig((prevState) => {
         return {
           ...prevState,
@@ -43,9 +44,18 @@ export default function useG6() {
       graph.layout();
       graph.fitView();
     }
+  }
+
+  useEffect(() => {
+    if (canvasRef.current) {
+      resizeListener();
+    }
+  }, [hide]);
+
+  useEffect(() => {
     window.addEventListener("resize", resizeListener);
     return () => window.removeEventListener("resize", resizeListener);
-  }, []);
+  }, [width, height]);
 
   useEffect(() => {
     graphRef.current = new G6.Graph({
@@ -198,5 +208,5 @@ export default function useG6() {
       return graph.getEdges();
     };
   }, []);
-  return [canvasRef];
+  return [canvasRef, hide, setHide];
 }
