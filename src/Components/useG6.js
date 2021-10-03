@@ -55,7 +55,7 @@ export default function useG6() {
   useEffect(() => {
     window.addEventListener("resize", resizeListener);
     return () => window.removeEventListener("resize", resizeListener);
-  }, [width, height]);
+  }, []);
 
   useEffect(() => {
     graphRef.current = new G6.Graph({
