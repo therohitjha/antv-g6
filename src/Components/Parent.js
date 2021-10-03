@@ -1,20 +1,21 @@
 import React, { useState } from "react";
-import Wrapper from "./Wrapper";
+import useG6 from "./useG6";
 import Canvas from "./Canvas";
 import Sidebar from "./Sidebar";
 
-function Parent({ canvasRef, graphRef }) {
+export default function Parent() {
+  const [canvasRef] = useG6()
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
 
   const getNodes = () => {
-    if (graphRef.current) {
-      setNodes(graphRef.current.getNumberOfNodes());
+    if (canvasRef.current) {
+      setNodes(canvasRef.current.getNumberOfNodes());
     }
   };
   const getEdges = () => {
-    if (graphRef.current) {
-      setEdges(graphRef.current.getNumberOfEdges());
+    if (canvasRef.current) {
+      setEdges(canvasRef.current.getNumberOfEdges());
     }
   };
 
@@ -31,4 +32,3 @@ function Parent({ canvasRef, graphRef }) {
   );
 }
 
-export default Wrapper(Parent);

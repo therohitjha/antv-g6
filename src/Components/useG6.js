@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import  { useEffect, useState, useRef } from "react";
 import G6 from "@antv/g6";
 import color from "color";
 import useData from "../hooks/useData";
@@ -12,8 +12,7 @@ const NodeColor = "#fff";
 const NodeBorderColor = "#0052D9";
 const NodeBGColor = color(NodeBorderColor).alpha(0.6).string();
 
-export default function Wrapper(Component) {
-  return function WrapperComponent() {
+ export default function useG6() {
     const canvasRef = useRef(null);
     const graphRef = useRef(null);
     const [zoom, setZoom] = useState(0);
@@ -196,13 +195,12 @@ export default function Wrapper(Component) {
       graph.data(data);
       graph.render();
 
-      G6.Graph.prototype.getNumberOfNodes = function () {
+      HTMLElement.prototype.getNumberOfNodes = function () {
         return graph.getNodes();
       };
-      G6.Graph.prototype.getNumberOfEdges = function () {
+      HTMLElement.prototype.getNumberOfEdges = function () {
         return graph.getEdges();
       };
     }, []);
-    return <Component canvasRef={canvasRef} graphRef={graphRef} />;
+    return [canvasRef];
   };
-}
