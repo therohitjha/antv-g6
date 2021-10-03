@@ -50,12 +50,9 @@ export default function useG6() {
     if (canvasRef.current) {
       resizeListener();
     }
-  }, [hide]);
-
-  useEffect(() => {
     window.addEventListener("resize", resizeListener);
     return () => window.removeEventListener("resize", resizeListener);
-  }, []);
+  }, [hide]);
 
   useEffect(() => {
     graphRef.current = new G6.Graph({
