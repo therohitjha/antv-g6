@@ -2,7 +2,7 @@
   "main": "index.js",
   "homepage": "https://therohitjha.github.io/antv-g6",
   "dependencies": {
-    "@antv/g6": "3.7.0",
+    "@antv/g6": "^3.8.5",
     "@antv/graphin": "1.4.4",
     "antd": "4.5.2",
     "color": "3.1.2",

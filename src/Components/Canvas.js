@@ -1,7 +1,12 @@
 import React from "react";
 
-export default function Canvas({ canvasRef }) {
-  return <div ref={canvasRef} className="canvas"></div>;
+export default function Canvas({ canvasRef, hide }) {
+  return (
+    <div
+      ref={canvasRef}
+      className={`${!hide ? "canvas" : "canvas-full"}`}
+    ></div>
+  );
 }
 
 // Above,  G6 appending canvas to div using canvasRef.

@@ -1,4 +1,4 @@
-import  { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import G6 from "@antv/g6";
 import color from "color";
 import useData from "../hooks/useData";
@@ -12,195 +12,191 @@ const NodeColor = "#fff";
 const NodeBorderColor = "#0052D9";
 const NodeBGColor = color(NodeBorderColor).alpha(0.6).string();
 
- export default function useG6() {
-    const canvasRef = useRef(null);
-    const graphRef = useRef(null);
-    const [zoom, setZoom] = useState(0);
+export default function useG6() {
+  const canvasRef = useRef(null);
+  const graphRef = useRef(null);
+  const [zoom, setZoom] = useState(0);
+  const [config, setConfig] = useState({
+    nodeSize: 18,
+    width: window.innerWidth,
+    height: window.innerHeight,
+    layout: "force",
+    isLabelShow: false,
+  });
+  const { nodeSize, width, height, layout, isLabelShow } = config;
+  const data = useData(0);
 
-    const [config, setConfig] = useState({
-      nodeSize: 18,
-      width: window.innerWidth/2,
-      height: window.innerHeight,
-      layout: "force",
-      isLabelShow: false,
+  useEffect(() => {
+    function resizeListener() {
+      const graph = graphRef.current;
+      setConfig((prevState) => {
+        return {
+          ...prevState,
+          width: canvasRef.current.offsetWidth,
+          height: canvasRef.current.offsetHeight,
+        };
+      });
+      graph.changeSize(
+        canvasRef.current.offsetWidth,
+        canvasRef.current.offsetHeight,
+      );
+      graph.layout();
+      graph.fitView();
+    }
+    window.addEventListener("resize", resizeListener);
+    return () => window.removeEventListener("resize", resizeListener);
+  }, []);
+
+  useEffect(() => {
+    graphRef.current = new G6.Graph({
+      container: canvasRef.current,
+      width,
+      height,
+      modes: {
+        default: [
+          {
+            type: "drag-canvas",
+            enableOptimize: false,
+          },
+          {
+            type: "zoom-canvas",
+            enableOptimize: true,
+            optimizeZoom: 1,
+          },
+          {
+            type: "activate-relations",
+            trigger: "click",
+          },
+          {
+            type: "tooltip",
+            formatText(model) {
+              return model.id;
+            },
+            offset: 10,
+          },
+          {
+            type: "edge-tooltip",
+            formatText(model) {
+              return model.id;
+            },
+            offset: 10,
+          },
+          "drag-node",
+        ],
+      },
+      layout: layoutMap[layout],
+      defaultNode: {
+        color: "#5B8FF9",
+        style: {
+          lineWidth: 1,
+          fill: "#C6E5FF",
+        },
+
+        size: nodeSize,
+        type: "iconfont",
+        iconAttrs: {
+          fill: NodeColor,
+          text: "\ue628",
+        },
+        labelAttrs: {
+          fill: NodeBorderColor,
+          text: "Node Label",
+        },
+        backgroundAttrs: {
+          backgroundType: "circle",
+          fill: NodeBGColor,
+          stroke: NodeBorderColor,
+          r: nodeSize / 2,
+        },
+      },
+      defaultEdge: {
+        type: "line-arrow",
+      },
     });
 
-    const { nodeSize, width, height, layout, isLabelShow } = config;
-    const data = useData(0);
+    const graph = graphRef.current;
+    graph.render();
 
-    useEffect(() => {
-      function resizeListener() {
-        const graph = graphRef.current;
-        setConfig((prevState) => {
-          return {
-            ...prevState,
-            width: canvasRef.current.offsetWidth,
-            height: canvasRef.current.offsetHeight,
-          };
-        });
-        graph.changeSize(
-          canvasRef.current.offsetWidth,
-          canvasRef.current.offsetHeight,
-        );
-        graph.layout();
-        graph.fitView();
-      }
+    handleEvent(graph, {
+      onWheelZoom: setZoom,
+    });
+  }, []);
 
-      window.addEventListener("resize", resizeListener);
+  useEffect(() => {
+    const graph = graphRef.current;
+    if (!graph) {
+      return;
+    }
 
-      return () => window.removeEventListener("resize", resizeListener);
-    }, []);
-
-    useEffect(() => {
-      graphRef.current = new G6.Graph({
-        container: canvasRef.current,
-        width,
-        height,
-        modes: {
-          default: [
-            {
-              type: "drag-canvas",
-              enableOptimize: false,
-            },
-            {
-              type: "zoom-canvas",
-              enableOptimize: true,
-              optimizeZoom: 1,
-            },
-            {
-              type: "activate-relations",
-              trigger: "click",
-            },
-            {
-              type: "tooltip",
-              formatText(model) {
-                return model.id;
-              },
-              offset: 10,
-            },
-            {
-              type: "edge-tooltip",
-              formatText(model) {
-                return model.id;
-              },
-              offset: 10,
-            },
-            "drag-node",
-          ],
+    const autoPaint = graph.get("autoPaint");
+    graph.findAll("node", (node) => {
+      graph.update(node, {
+        size: nodeSize,
+        isLabelShow,
+        backgroundAttrs: {
+          r: nodeSize / 2,
         },
-        layout: layoutMap[layout],
-        defaultNode: {
-          color: "#5B8FF9",
-          style: {
-            lineWidth: 1,
-            fill: "#C6E5FF",
-          },
-
-          size: nodeSize,
-          type: "iconfont",
-          iconAttrs: {
-            fill: NodeColor,
-            text: "\ue628",
-          },
-          labelAttrs: {
-            fill: NodeBorderColor,
-            text: "Node Label",
-          },
-          backgroundAttrs: {
-            backgroundType: "circle",
-            fill: NodeBGColor,
-            stroke: NodeBorderColor,
-            r: nodeSize / 2,
-          },
-        },
-        defaultEdge: {
-          type: "line-arrow",
-        },
+        zoom,
       });
+    });
 
-      const graph = graphRef.current;
-      graph.render();
+    graph.paint();
+    graph.setAutoPaint(autoPaint);
+  }, []);
 
-      handleEvent(graph, {
-        onWheelZoom: setZoom,
-      });
-    }, []);
+  useEffect(() => {
+    const graph = graphRef.current;
+    if (!graph) {
+      return;
+    }
 
-    useEffect(() => {
-      const graph = graphRef.current;
-      if (!graph) {
-        return;
+    graph.updateLayout({
+      ...layoutMap[layout],
+      width,
+      height,
+    });
+    graph.changeSize(width, height);
+  }, []);
+
+  useEffect(() => {
+    const graph = graphRef.current;
+
+    if (!graph) {
+      return;
+    }
+
+    const links = [];
+    data.edges.forEach((item) => {
+      const sameLink = links.filter(
+        (_) => _.source === item.source && _.target === item.target,
+      );
+      item.curveOffset =
+        (CURVENESS_LIST[sameLink.length] || Math.random()) * 40;
+
+      if (item.source === item.target) {
+        item.type = "loop";
+        item.style = {
+          stroke: "#F6BD16",
+          endArrow: {
+            path: "M 0,0 L 3,2 L 2.5,0 L 3,-2 Z",
+            fill: "#F6BD16",
+          },
+        };
       }
+      links.push(item);
+    });
 
-      const autoPaint = graph.get("autoPaint");
-      graph.findAll("node", (node) => {
-        graph.update(node, {
-          size: nodeSize,
-          isLabelShow,
-          backgroundAttrs: {
-            r: nodeSize / 2,
-          },
-          zoom,
-        });
-      });
+    data.edges = links;
 
-      graph.paint();
-      graph.setAutoPaint(autoPaint);
-    }, []);
+    graph.data(data);
+    graph.render();
 
-    useEffect(() => {
-      const graph = graphRef.current;
-      if (!graph) {
-        return;
-      }
-
-      graph.updateLayout({
-        ...layoutMap[layout],
-        width,
-        height,
-      });
-      graph.changeSize(width, height);
-    }, []);
-
-    useEffect(() => {
-      const graph = graphRef.current;
-
-      if (!graph) {
-        return;
-      }
-
-      const links = [];
-      data.edges.forEach((item) => {
-        const sameLink = links.filter(
-          (_) => _.source === item.source && _.target === item.target,
-        );
-        item.curveOffset =
-          (CURVENESS_LIST[sameLink.length] || Math.random()) * 40;
-
-        if (item.source === item.target) {
-          item.type = "loop";
-          item.style = {
-            stroke: "#F6BD16",
-            endArrow: {
-              path: "M 0,0 L 3,2 L 2.5,0 L 3,-2 Z",
-              fill: "#F6BD16",
-            },
-          };
-        }
-        links.push(item);
-      });
-
-      data.edges = links;
-
-      graph.data(data);
-      graph.render();
-
-      HTMLElement.prototype.getNumberOfNodes = function () {
-        return graph.getNodes();
-      };
-      HTMLElement.prototype.getNumberOfEdges = function () {
-        return graph.getEdges();
-      };
-    }, []);
-    return [canvasRef];
-  };
+    canvasRef.current.getNumberOfNodes = function () {
+      return graph.getNodes();
+    };
+    canvasRef.current.getNumberOfEdges = function () {
+      return graph.getEdges();
+    };
+  }, []);
+  return [canvasRef];
+}
