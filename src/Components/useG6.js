@@ -154,19 +154,19 @@ export default function useG6() {
     graph.setAutoPaint(autoPaint);
   }, []);
 
-  useEffect(() => {
-    const graph = graphRef.current;
-    if (!graph) {
-      return;
-    }
+  // useEffect(() => {
+  //   const graph = graphRef.current;
+  //   if (!graph) {
+  //     return;
+  //   }
 
-    graph.updateLayout({
-      ...layoutMap[layout],
-      width,
-      height,
-    });
-    graph.changeSize(width, height);
-  }, []);
+  //   graph.updateLayout({
+  //     ...layoutMap[layout],
+  //     width,
+  //     height,
+  //   });
+  //   graph.changeSize(width, height);
+  // }, []);
 
   useEffect(() => {
     const graph = graphRef.current;
