@@ -35,7 +35,7 @@ export default function Parent() {
         />
       )}
       <button className="hide" onClick={handleSidebar}>
-        Hide Sidebar
+        {!hide ? "Hide Sidebar" : "Show Sidebar"}
       </button>
     </div>
   );
