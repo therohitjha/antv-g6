@@ -8,7 +8,6 @@ import "antd/dist/antd.css";
 import { handleEvent } from "../utils";
 import "../register";
 import "../index.css";
-import Canvas from "./Canvas";
 
 const NodeColor = "#fff";
 const NodeBorderColor = "#0052D9";
@@ -203,6 +202,6 @@ const Wrapper = React.forwardRef((props, ref) => {
       return graph.getEdges();
     };
   }, []);
-  return <Canvas ref={ref} {...props} />;
+  return <div ref={ref} {...props}></div>;
 });
 export default Wrapper;
