@@ -27,7 +27,6 @@ const useResizeObserver = (ref) => {
       observer.unobserve(observerTarget);
     };
   }, [ref]);
-  console.log(dimension);
   return dimension;
 };
 

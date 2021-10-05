@@ -25,7 +25,5 @@ export const handleEvent = (graph, { onWheelZoom }) => {
   });
 
   graph.on("afteractivaterelations", (e) => {
-    console.log(e.item);
-    console.log(e.action);
   });
 };
