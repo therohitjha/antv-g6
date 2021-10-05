@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react'
 
-function Sidebar({ getEdges, getNodes, nodes, edges }) {
+export default function Sidebar({ getEdges, getNodes, nodes, edges }) {
   return (
     <div className="sidebar">
       Nodes: {nodes.length ? nodes.length : null}
@@ -14,5 +14,3 @@ function Sidebar({ getEdges, getNodes, nodes, edges }) {
     </div>
   );
 }
-
-export default Sidebar;

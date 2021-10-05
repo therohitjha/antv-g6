@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import ResizeObserver from "resize-observer-polyfill";
 import G6 from "@antv/g6";
 import color from "color";
 import useData from "../hooks/useData";
@@ -7,16 +8,33 @@ import "antd/dist/antd.css";
 import { handleEvent } from "../utils";
 import "../register";
 import "../index.css";
+import Canvas from "./Canvas";
 
 const NodeColor = "#fff";
 const NodeBorderColor = "#0052D9";
 const NodeBGColor = color(NodeBorderColor).alpha(0.6).string();
 
-export default function useG6() {
-  const canvasRef = useRef(null);
+const useResizeObserver = (ref) => {
+  const [dimension, setDimension] = useState(null);
+
+  useEffect(() => {
+    const observerTarget = ref.current;
+    const observer = new ResizeObserver((e) => {
+      e.forEach((k) => setDimension(k.contentRect));
+    });
+    observer.observe(observerTarget);
+    return () => {
+      observer.unobserve(observerTarget);
+    };
+  }, [ref]);
+  console.log(dimension);
+  return dimension;
+};
+
+const Wrapper = React.forwardRef((props, ref) => {
   const graphRef = useRef(null);
+  const dimension = useResizeObserver(ref);
   const [zoom, setZoom] = useState(0);
-  const [hide, setHide] = useState(false);
   const [config, setConfig] = useState({
     nodeSize: 18,
     width: 1000,
@@ -33,30 +51,25 @@ export default function useG6() {
       setConfig((prevState) => {
         return {
           ...prevState,
-          width: canvasRef.current.offsetWidth,
-          height: canvasRef.current.offsetHeight,
+          width: dimension.width,
+          height: dimension.height,
         };
       });
-      graph.changeSize(
-        canvasRef.current.offsetWidth,
-        canvasRef.current.offsetHeight,
-      );
+      graph.changeSize(dimension.width, dimension.height);
       graph.layout();
       graph.fitView();
     }
   }
 
   useEffect(() => {
-    if (canvasRef.current) {
+    if (ref.current) {
       resizeListener();
     }
-    window.addEventListener("resize", resizeListener);
-    return () => window.removeEventListener("resize", resizeListener);
-  }, [hide]);
+  }, [dimension]);
 
   useEffect(() => {
     graphRef.current = new G6.Graph({
-      container: canvasRef.current,
+      container: ref.current,
       width,
       height,
       modes: {
@@ -151,20 +164,6 @@ export default function useG6() {
     graph.setAutoPaint(autoPaint);
   }, []);
 
-  // useEffect(() => {
-  //   const graph = graphRef.current;
-  //   if (!graph) {
-  //     return;
-  //   }
-
-  //   graph.updateLayout({
-  //     ...layoutMap[layout],
-  //     width,
-  //     height,
-  //   });
-  //   graph.changeSize(width, height);
-  // }, []);
-
   useEffect(() => {
     const graph = graphRef.current;
 
@@ -198,12 +197,13 @@ export default function useG6() {
     graph.data(data);
     graph.render();
 
-    canvasRef.current.getNumberOfNodes = function () {
+    ref.current.getNumberOfNodes = function () {
       return graph.getNodes();
     };
-    canvasRef.current.getNumberOfEdges = function () {
+    ref.current.getNumberOfEdges = function () {
       return graph.getEdges();
     };
   }, []);
-  return [canvasRef, hide, setHide];
-}
+  return <Canvas ref={ref} {...props} />;
+});
+export default Wrapper;

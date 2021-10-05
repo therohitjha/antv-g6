@@ -26,11 +26,8 @@ body {
 }
 
 .container {
-  position: relative;
-  border: solid 1px;
   background: #fff;
   width: 100%;
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,24 +41,17 @@ body {
   flex-direction: column;
   background-color: #eee;
 }
-.canvas {
+.canvas{
   width: 70%;
   display: flex;
   justify-content: center;
 }
-.canvas-full {
+
+.canvas-full{
   width: 100%;
   display: flex;
   justify-content: center;
-}
-
-.layout__container {
-  display: flex;
-}
-
-.setting__container {
-  min-width: 500px;
-  padding: 24px;
+  align-items: center;
 }
 
 

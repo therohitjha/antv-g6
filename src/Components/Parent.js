@@ -1,21 +1,20 @@
-import React, { useState } from "react";
-import useG6 from "./useG6";
-import Canvas from "./Canvas";
+import React, { useState, useRef } from "react";
 import Sidebar from "./Sidebar";
-
+import Wrapper from "./Wrapper";
 export default function Parent() {
-  const [canvasRef, hide, setHide] = useG6();
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
+  const [hide, setHide] = useState(false);
+  const ref = useRef(null);
 
   const getNodes = () => {
-    if (canvasRef.current) {
-      setNodes(canvasRef.current.getNumberOfNodes());
+    if (ref.current) {
+      setNodes(ref.current.getNumberOfNodes());
     }
   };
   const getEdges = () => {
-    if (canvasRef.current) {
-      setEdges(canvasRef.current.getNumberOfEdges());
+    if (ref.current) {
+      setEdges(ref.current.getNumberOfEdges());
     }
   };
 
@@ -25,7 +24,7 @@ export default function Parent() {
 
   return (
     <div className="container">
-      <Canvas canvasRef={canvasRef} hide={hide} />
+      <Wrapper ref={ref} className={hide ? 'canvas-full' : 'canvas'} />
       {!hide && (
         <Sidebar
           nodes={nodes}
